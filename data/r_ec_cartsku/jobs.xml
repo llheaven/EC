@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <jobs>
+        <job>
+            <id>1</id>
+            <num>500000</num>
+            <table>r_ec_cartsku</table>
+            <filename>r_ec_cartsku.sql</filename>
+            <detail>
+				<nProductID>$rule{nProductID,4}</nProductID>
+				<nQuantity>$pool{nQuantity}</nQuantity>
+            </detail>
+        </job>
+    </jobs>
+</root>
