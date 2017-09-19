@@ -12,7 +12,7 @@ replace into r_ec_brand (sBrandName) values('美特斯邦威');
 replace into r_ec_brand (sBrandName) values('美特斯邦威');
 replace into r_ec_brand (sBrandName) values('百丽');
 replace into r_ec_brand (sBrandName) values('百丽');
--- replace into r_ec_brand (sBrandName) values('lee');
+replace into r_ec_brand (sBrandName) values('lee');
 replace into r_ec_brand (sBrandName) values('七匹狼');
 replace into r_ec_brand (sBrandName) values('美特斯邦威');
 replace into r_ec_brand (sBrandName) values('美特斯邦威');
