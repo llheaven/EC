@@ -1,4 +1,4 @@
-package main.java.cn.net.communion.xml;
+package src.main.java.cn.net.communion.xml;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import main.java.cn.net.communion.entity.JobInfo;
-import main.java.cn.net.communion.entity.KeyValue;
-
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+
+import src.main.java.cn.net.communion.entity.JobInfo;
+import src.main.java.cn.net.communion.entity.KeyValue;
+
+
 
 
 
@@ -29,11 +31,11 @@ public class Root {
     public Root loadXml(String file) {
         SAXReader reader = new SAXReader();
         try {
-            // 读取xml的配置文件名，并获取其里面的节点
+            // 璇诲彇xml鐨勯厤缃枃浠跺悕锛屽苟鑾峰彇鍏堕噷闈㈢殑鑺傜偣
             Element root = reader.read(file).getRootElement();
             // System.out.println(root.element("path").getTextTrim());
             Element jobs = root.element("jobs");
-            // 遍历job即同步的表
+            // 閬嶅巻job鍗冲悓姝ョ殑琛�
             for (Iterator it = jobs.elementIterator("job"); it.hasNext();) {
                 this.jobList.add(elementJobtoObject((Element) it.next(), new JobInfo()));
             }
@@ -70,7 +72,7 @@ public class Root {
 
     static public void main(String[] args) {
         Root parser = new Root();
-        parser.loadXml("D://jobs.xml");
+        parser.loadXml("jobs.xml");
     }
 
     public List<JobInfo> getJobList() {

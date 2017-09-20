@@ -1,4 +1,4 @@
-package main.java.cn.net.communion.helper;
+package src.main.java.cn.net.communion.helper;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -30,7 +30,7 @@ public class FileHelper {
         }
     }
 
-    static public void save(FileWriter writer, String table, Map<String, String> map) {
+    static public synchronized  void save(FileWriter writer, String table, Map<String, String> map) {
         if(writer == null && (table == null || "".equals(table.trim()))){
             System.out.println(map);
             return;
@@ -43,7 +43,17 @@ public class FileHelper {
             System.out.println(line);
         }
     }
+    static public synchronized  StringBuffer getInsertSQL(String table, Map<String, String> map) {
+        if(table == null || "".equals(table.trim())){
+            System.out.println(map);
+            return null;
+        }
+        StringBuffer line = new StringBuffer("replace into ").append(table).append(" (").append(collectionToLine(map.keySet())).append(")").append(" values(")
+                        .append(collectionToLineWithQuotes(map.values())).append(");");
+        return line;
 
+    }
+    
     static public void save(FileWriter writer, Collection<String> col) {
         save(writer, collectionToLine(col));
     }

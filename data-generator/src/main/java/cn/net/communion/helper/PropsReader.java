@@ -1,4 +1,4 @@
-package main.java.cn.net.communion.helper;
+package src.main.java.cn.net.communion.helper;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,7 +15,7 @@ public class PropsReader {
     private PropsReader() {
         props = new Properties();
         try {
-            InputStreamReader in = new InputStreamReader(new FileInputStream("D://config.properties"),"utf-8");
+            InputStreamReader in = new InputStreamReader(new FileInputStream("config.properties"),"utf-8");
             props.load(in);
 
         } catch (IOException e) {

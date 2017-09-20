@@ -1,4 +1,4 @@
-package main.java.cn.net.communion.entity;
+package src.main.java.cn.net.communion.entity;
 
 public class KeyValue {
     public String key;

@@ -1,4 +1,4 @@
-package main.java.cn.net.communion.core;
+package src.main.java.cn.net.communion.core;
 
 
 import java.time.temporal.ChronoUnit;
@@ -8,9 +8,9 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import main.java.cn.net.communion.helper.FileHelper;
-import main.java.cn.net.communion.helper.PropsReader;
-import main.java.cn.net.communion.helper.RandomData;
+import src.main.java.cn.net.communion.helper.FileHelper;
+import src.main.java.cn.net.communion.helper.PropsReader;
+import src.main.java.cn.net.communion.helper.RandomData;
 
 
 

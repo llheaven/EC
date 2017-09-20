@@ -1,4 +1,4 @@
-package main.java.cn.net.communion.helper;
+package src.main.java.cn.net.communion.helper;
 
 import java.util.Random;
 
