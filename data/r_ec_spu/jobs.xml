@@ -8,7 +8,7 @@
             <filename>r_ec_spu.sql</filename>
             <detail>
 		<nSPUID>$rule{nSPUID,3}</nSPUID>
-		<nSPUName>$pool{nSPUName}</nSPUName>
+		<sSPUName>$pool{sSPUName}</sSPUName>
                 <nCategoryID>$rule{nCategoryID,3}</nCategoryID>
             </detail>
 	</job>
