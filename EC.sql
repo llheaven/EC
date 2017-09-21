@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 50717
 Source Host           : localhost:3306
-Source Database       : ec
+Source Database       : ec2
 
 Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-09-18 18:15:54
+Date: 2017-09-21 19:48:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,18 +24,19 @@ CREATE TABLE `r_ec_brand` (
   `sBrandName` varchar(64) NOT NULL COMMENT '品牌名称',
   PRIMARY KEY (`nBrandID`),
   KEY `PRIMARY_nBrandID` (`nBrandID`) USING BTREE COMMENT '使用品牌id作为主键索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='品牌信息';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='品牌信息';
 
 -- ----------------------------
 -- Table structure for r_ec_cartsku
 -- ----------------------------
 DROP TABLE IF EXISTS `r_ec_cartsku`;
 CREATE TABLE `r_ec_cartsku` (
-  `nUserID` int(64) NOT NULL AUTO_INCREMENT COMMENT '用户id',
+  `nUserID` int(64) NOT NULL COMMENT '用户id',
   `nProductID` int(64) NOT NULL,
   `nQuantity` int(64) NOT NULL,
   PRIMARY KEY (`nUserID`,`nProductID`),
-  KEY `PRIMARY_nUserID` (`nUserID`) USING BTREE COMMENT '使用用户id作为主键索引'
+  KEY `PRIMARY_nUserID` (`nUserID`) USING BTREE COMMENT '使用用户id作为主键索引',
+  KEY `PRIMARY_nProductID` (`nProductID`) USING BTREE COMMENT '使用产品id作为主键索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='购物车SKU';
 
 -- ----------------------------
@@ -49,7 +50,7 @@ CREATE TABLE `r_ec_category` (
   `sCategoryName` varchar(64) NOT NULL COMMENT '商品种类',
   PRIMARY KEY (`nCategoryID`),
   KEY `PRIMARY_nCategoryID` (`nCategoryID`) USING BTREE COMMENT '使用分类id作为主键索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类';
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COMMENT='商品分类';
 
 -- ----------------------------
 -- Table structure for r_ec_deliveryinfo
@@ -58,8 +59,8 @@ DROP TABLE IF EXISTS `r_ec_deliveryinfo`;
 CREATE TABLE `r_ec_deliveryinfo` (
   `sDeliveryID` varchar(64) NOT NULL COMMENT '配送编号',
   `sExpressCompany` varchar(32) DEFAULT NULL COMMENT '配送公司',
-  `nDeliveryPrice` decimal(10,2) NOT NULL COMMENT '配送价格',
-  `cStatus` enum('4','3','2','1') NOT NULL DEFAULT '1' COMMENT '配送状态:1：已收件;2：在途;3：待签收;4：已签收',
+  `nDeliveryPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '配送价格',
+  `cStatus` enum('0','4','3','2','1') NOT NULL DEFAULT '1' COMMENT '配送状态:0:未收件；1：已收件;2：在途;3：待签收;4：已签收',
   PRIMARY KEY (`sDeliveryID`),
   KEY `PRIMARY_sDeliveryID` (`sDeliveryID`) USING BTREE COMMENT ' 使用配送编号作为主键索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配送信息';
@@ -79,13 +80,13 @@ CREATE TABLE `r_ec_image` (
   `nAttachment_height` int(32) DEFAULT NULL COMMENT '附件长度',
   `sAlt` varchar(32) DEFAULT NULL,
   `sViewable_type` varchar(32) DEFAULT NULL,
-  `sMini_url` varchar(32) DEFAULT NULL COMMENT 'mini图片的url',
-  `sSmall_url` varchar(32) DEFAULT NULL COMMENT 'small图片的url',
-  `sLarge_url` varchar(32) DEFAULT NULL COMMENT 'big图片的url',
-  `sProduct_url` varchar(32) DEFAULT NULL,
+  `sMini_url` varchar(64) DEFAULT NULL COMMENT 'mini图片的url',
+  `sSmall_url` varchar(64) DEFAULT NULL COMMENT 'small图片的url',
+  `sLarge_url` varchar(64) DEFAULT NULL COMMENT 'big图片的url',
+  `sProduct_url` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`nImageID`),
   KEY `PRIMARY_nImageID` (`nImageID`) USING BTREE COMMENT '使用image的id作为主键索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片附件信息';
+) ENGINE=InnoDB AUTO_INCREMENT=543 DEFAULT CHARSET=utf8 COMMENT='图片附件信息';
 
 -- ----------------------------
 -- Table structure for r_ec_orderinfo
@@ -93,16 +94,16 @@ CREATE TABLE `r_ec_image` (
 DROP TABLE IF EXISTS `r_ec_orderinfo`;
 CREATE TABLE `r_ec_orderinfo` (
   `sOrderID` varchar(64) NOT NULL COMMENT '订单ID\r\n由系统自动生成，生成订单编号时包含日期.\r\n',
-  `nUserID` int(64) NOT NULL COMMENT '下单人。\r\n关联R_EC_UserInfo表获取到需要显示的用户信息\r\n',
+  `nUserID` bigint(64) NOT NULL COMMENT '下单人。\r\n关联R_EC_UserInfo表获取到需要显示的用户信息\r\n',
   `sParentOrderID` varchar(64) DEFAULT NULL COMMENT '父订单\r\n默认为空\r\n',
   `cPaymentMethod` enum('3','2','1','0') DEFAULT '0' COMMENT '付款方式:0：信用支付;1：货到付款;2：银行卡支付;3：白条',
   `sPaymentMethodTitle` varchar(255) DEFAULT NULL COMMENT '付款方式描述',
   `nDiscount` float DEFAULT NULL COMMENT '折扣',
-  `nTotalQuantity` int(64) NOT NULL COMMENT '总数量',
+  `nTotalQuantity` int(64) DEFAULT NULL COMMENT '总数量',
   `nTotalPrice` decimal(10,2) NOT NULL COMMENT '总价',
   `sVersion` varchar(64) DEFAULT NULL COMMENT '订单version',
   `nAddressNo` int(64) DEFAULT NULL COMMENT '收货地址。\r\n关联到R_EC_UserDeliveryAddress获取收货地址\r\n',
-  `cStatus` enum('4','3','2','1','0') NOT NULL DEFAULT '0' COMMENT '订单状态:0：未支付;1：已支付未发货;2：已发货;3：已接收;4：已关闭',
+  `cStatus` enum('4','3','2','1','0') DEFAULT '0' COMMENT '订单状态:0：未支付;1：已支付未发货;2：已发货;3：已接收;4：已关闭',
   `sDate_created` datetime NOT NULL COMMENT '订单创建时间\r\n格式:YYYY-MM-DD HH:MM:SS\r\n',
   `sDate_Modified` datetime NOT NULL COMMENT '订单修改时间\r\n格式:YYYY-MM-DD HH:MM:SS\r\n',
   `sDate_Paid` datetime DEFAULT NULL COMMENT '订单支付时间\r\n格式:YYYY-MM-DD HH:MM:SS\r\n',
@@ -151,7 +152,7 @@ CREATE TABLE `r_ec_shoppingcart` (
 DROP TABLE IF EXISTS `r_ec_sku`;
 CREATE TABLE `r_ec_sku` (
   `nSPUID` int(64) DEFAULT NULL,
-  `nSKUID` int(64) NOT NULL COMMENT '商品id',
+  `nSKUID` int(64) NOT NULL AUTO_INCREMENT COMMENT '商品id',
   `nColor` varchar(16) DEFAULT NULL COMMENT '颜色',
   `sSize` varchar(16) DEFAULT NULL COMMENT '尺寸',
   `nPrice` decimal(10,2) NOT NULL COMMENT '商品价格',
@@ -161,7 +162,7 @@ CREATE TABLE `r_ec_sku` (
   `sCurrency` varchar(16) DEFAULT NULL COMMENT '货币类型',
   PRIMARY KEY (`nSKUID`),
   KEY `PRIMARY_nProductID` (`nSKUID`) USING BTREE COMMENT '使用产品id作为主键索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=767 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for r_ec_spu
@@ -172,15 +173,15 @@ CREATE TABLE `r_ec_spu` (
   `sSPUName` varchar(64) NOT NULL COMMENT '商品名称',
   `sAvailable_on` varchar(20) DEFAULT NULL,
   `slug` varchar(128) DEFAULT NULL,
-  `sMeta_description` varchar(255) DEFAULT NULL,
+  `sMeta_description` varchar(2000) DEFAULT NULL,
   `sMeta_keywords` varchar(255) DEFAULT NULL,
   `nCategoryID` int(64) NOT NULL COMMENT '商品种类ID',
   `nBrandID` int(64) DEFAULT NULL COMMENT '品牌ID',
   `nImageID` int(64) DEFAULT NULL COMMENT 'Image ID',
-  `sDescription` varchar(255) DEFAULT NULL COMMENT '描述信息',
+  `sDescription` varchar(2000) DEFAULT NULL COMMENT '描述信息',
   PRIMARY KEY (`nSPUID`),
   KEY `PRIMARY_nProductID` (`nSPUID`) USING BTREE COMMENT ' 使用产品id作为主键索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品信息';
+) ENGINE=InnoDB AUTO_INCREMENT=543 DEFAULT CHARSET=utf8 COMMENT='商品信息';
 
 -- ----------------------------
 -- Table structure for r_ec_userbankinfo
