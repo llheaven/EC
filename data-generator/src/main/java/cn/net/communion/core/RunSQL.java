@@ -25,13 +25,17 @@ public class RunSQL extends Thread {
 	private int end =0;
 	List<String> sqlList = null;
 	//
-	private static final String URL="jdbc:mysql://localhost:3306/ec?";
-    private static final String NAME="root";
-    private static final String PASSWORD="";
+	private String IP = "localhost";
+	//
+	private   String URL= "";
+    private   String NAME="root";
+    private   String PASSWORD="";
     private Connection conn = null; 
     private Statement  stmt = null;
-    
-	public RunSQL(List<KeyValue> detail,JobInfo job,int jobnum,FileWriter writer,int start,int end,List<String> sqlList){
+	public RunSQL(List<KeyValue> detail,JobInfo job,int jobnum,FileWriter writer,int start,int end,List<String> sqlList,String IP,String PASSWORD){
+		this.IP = IP;
+		this.PASSWORD = PASSWORD;
+		URL = "jdbc:mysql://"+IP+":3306/ec?";
 		for(int i=0;i<detail.size();i++)
 		{
 			this.detail.add(detail.get(i));

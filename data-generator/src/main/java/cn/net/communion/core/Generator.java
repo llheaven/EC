@@ -10,6 +10,7 @@ import java.util.Map;
 import src.main.java.cn.net.communion.entity.JobInfo;
 import src.main.java.cn.net.communion.entity.KeyValue;
 import src.main.java.cn.net.communion.helper.FileHelper;
+import src.main.java.cn.net.communion.main.App;
 
 public class Generator {
 
@@ -21,8 +22,8 @@ public class Generator {
         long endTime = 0;
        
         for (JobInfo job : jobList) {
-	    	 System.out.println("[job-" + job.getId() + "]" + job.getNum() + " start!");
-	    	 System.out.println("==============================================================");
+	    	System.out.println("[job-" + job.getId() + "]" + job.getNum() + " start!");
+	    	System.out.println("==============================================================");
          	System.out.println("sql method:"+"replace");
             Map<String, String> tempMap = new HashMap<String, String>();
             List<KeyValue> detail = job.getDetail();
@@ -62,7 +63,7 @@ public class Generator {
                 }
                 writer.close();
                 System.out.println("waiting for replace data......");
-            	int threadNum=200;
+            	int threadNum=App.THREADNUM;
             	int split = job.getNum()/threadNum;
             	int left = job.getNum()-(split*threadNum);
             	RunSQL[] thread_sql=new RunSQL[threadNum];
@@ -72,7 +73,7 @@ public class Generator {
             	{
                 	for(int i=0;i<threadNum;i++)
                 	{
-                		RunSQL rs = new RunSQL(detail,job,split,writer,i*split,i*split+split,sqlList);
+                		RunSQL rs = new RunSQL(detail,job,split,writer,i*split,i*split+split,sqlList,App.IP,App.PASSWORD);
                 		thread_sql[i] = rs;
                 		rs.start();
                 	}
@@ -80,7 +81,7 @@ public class Generator {
             	RunSQL lrs = null;
             	if(left!=0)
             	{
-            		lrs = new RunSQL(detail,job,left,writer,threadNum*split,job.getNum(),sqlList);
+            		lrs = new RunSQL(detail,job,left,writer,threadNum*split,job.getNum(),sqlList,App.IP,App.PASSWORD);
             		lrs.start();
             	}
             	try
