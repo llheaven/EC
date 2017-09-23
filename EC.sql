@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-09-23 15:18:51
+Date: 2017-09-23 17:59:14
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -171,7 +171,7 @@ CREATE TABLE `r_ec_sku` (
   `nSKUID` bigint(64) NOT NULL AUTO_INCREMENT COMMENT '商品id',
   `nSPUID` bigint(64) NOT NULL DEFAULT '0' COMMENT 'SPU ID 默认为0 即没有商品',
   `nColor` varchar(16) NOT NULL DEFAULT '白色' COMMENT '颜色',
-  `sSize` varchar(16) NOT NULL DEFAULT '4GB+128GB' COMMENT '尺寸 规格',
+  `sSize` varchar(512) NOT NULL DEFAULT '4GB+128GB' COMMENT '尺寸 规格 制式 容量 套餐',
   `nPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '商品价格',
   `nDisplayPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '商品展示价格',
   `nInventory` int(64) NOT NULL DEFAULT '0' COMMENT '库存数量',
@@ -181,7 +181,7 @@ CREATE TABLE `r_ec_sku` (
   `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`nSKUID`),
   KEY `PRIMARY_nProductID` (`nSKUID`) USING BTREE COMMENT '使用产品id作为主键索引'
-) ENGINE=InnoDB AUTO_INCREMENT=769 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=923 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for r_ec_spu
@@ -202,7 +202,7 @@ CREATE TABLE `r_ec_spu` (
   `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`nSPUID`),
   KEY `PRIMARY_nProductID` (`nSPUID`) USING BTREE COMMENT ' 使用产品id作为主键索引'
-) ENGINE=InnoDB AUTO_INCREMENT=592 DEFAULT CHARSET=utf8 COMMENT='商品信息';
+) ENGINE=InnoDB AUTO_INCREMENT=645 DEFAULT CHARSET=utf8 COMMENT='商品信息';
 
 -- ----------------------------
 -- Table structure for r_ec_userbankinfo
