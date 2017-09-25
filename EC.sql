@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-09-25 17:03:30
+Date: 2017-09-25 17:58:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -43,6 +43,8 @@ CREATE TABLE `r_ec_cartsku` (
   `nQuantity` int(64) NOT NULL DEFAULT '0' COMMENT '商品数量-购物车中的商品数量',
   `nShoppingCartID` bigint(64) NOT NULL DEFAULT '0' COMMENT '购物车ID',
   `nCartSKUID` bigint(64) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `dCreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '生成时间',
+  `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`nCartSKUID`),
   KEY `PRIMARY_nUserID` (`nUserID`) USING BTREE COMMENT '使用用户id作为主键索引',
   KEY `PRIMARY_nProductID` (`nSKUID`) USING BTREE COMMENT '使用产品id作为主键索引'
@@ -77,10 +79,10 @@ CREATE TABLE `r_ec_deliveryinfo` (
   `dCreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '快递单创建时间',
   `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '快递单更新时间',
   `dOutTime` datetime DEFAULT NULL COMMENT '发货时间',
-  `nAddressID` bigint(20) NOT NULL DEFAULT '0' COMMENT '用户收货地址',
+  `nAddressID` bigint(64) NOT NULL DEFAULT '0' COMMENT '用户收货地址',
   `sConsignee` varchar(1024) NOT NULL DEFAULT '' COMMENT '收货人',
   `sDeliveryComment` varchar(1024) NOT NULL DEFAULT '' COMMENT '收货备注信息',
-  `sDeliveryCode` varchar(255) NOT NULL DEFAULT '' COMMENT '快递单号',
+  `sDeliveryCode` varchar(64) NOT NULL DEFAULT '' COMMENT '快递单号',
   PRIMARY KEY (`nDeliveryID`),
   KEY `PRIMARY_sDeliveryID` (`nDeliveryID`) USING BTREE COMMENT ' 使用配送编号作为主键索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配送信息';
@@ -124,7 +126,7 @@ CREATE TABLE `r_ec_orderinfo` (
   `sOrderType` smallint(6) NOT NULL DEFAULT '0' COMMENT '订单类型,0普通订单,1合并订单,2分拆订单,3换货单,4秒杀订单,5预购订单,6限时抢购订单,7大客户订单,8订单，9合约机，10代销,11B2XB订单,12B2DC订单',
   `dPaymentTime` datetime DEFAULT NULL COMMENT '订单支付时间',
   `sOrderSource` smallint(6) NOT NULL DEFAULT '1' COMMENT '订单来源:1商城,2企业通道,3商城,4手机客户端,5分销订单',
-  `nAddressID` bigint(20) NOT NULL DEFAULT '0' COMMENT '用户收货地址',
+  `nAddressID` bigint(64) NOT NULL DEFAULT '0' COMMENT '用户收货地址',
   PRIMARY KEY (`nOrderID`),
   KEY `PRIMAEY_sOrderID` (`nOrderID`) USING BTREE COMMENT '使用订单id作为主键索引',
   KEY `PRIMARY_nUserID` (`nUserID`) USING BTREE COMMENT '使用用户id作为主键索引'
@@ -137,8 +139,8 @@ DROP TABLE IF EXISTS `r_ec_ordersku`;
 CREATE TABLE `r_ec_ordersku` (
   `nOrderSKUID` bigint(64) NOT NULL AUTO_INCREMENT,
   `nOrderID` bigint(64) NOT NULL COMMENT '订单ID',
-  `nSKUID` int(64) NOT NULL DEFAULT '0' COMMENT '商品ID',
-  `nQuantity` int(64) NOT NULL DEFAULT '0' COMMENT '购买数量',
+  `nSKUID` bigint(64) NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `nQuantity` bigint(64) NOT NULL DEFAULT '0' COMMENT '购买数量',
   `nOrigPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '商品原价',
   `nDiscount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '折扣',
   `sCurrency` varchar(16) NOT NULL DEFAULT 'RMB' COMMENT '货币类型:RMB',
@@ -156,7 +158,7 @@ CREATE TABLE `r_ec_shoppingcart` (
   `nUserID` bigint(64) NOT NULL DEFAULT '0' COMMENT ' 用户id',
   `sUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '附件更新时间\r\n格式：YYYY-MM-DD HH:MM:SS\r\n',
   `nDiscount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '折扣',
-  `nTotalQuantity` int(64) NOT NULL DEFAULT '0' COMMENT '总数量',
+  `nTotalQuantity` bigint(64) NOT NULL DEFAULT '0' COMMENT '总数量',
   `sCurrency` varchar(16) NOT NULL DEFAULT 'RMB' COMMENT '货币类型',
   `nTotalPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
   `nCreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -189,7 +191,7 @@ CREATE TABLE `r_ec_sku` (
 -- ----------------------------
 DROP TABLE IF EXISTS `r_ec_spu`;
 CREATE TABLE `r_ec_spu` (
-  `nSPUID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '商品ID',
+  `nSPUID` bigint(64) NOT NULL AUTO_INCREMENT COMMENT '商品ID',
   `sSPUBriefName` varchar(50) NOT NULL DEFAULT '' COMMENT ' 简称',
   `sSPUName` varchar(64) NOT NULL DEFAULT '' COMMENT '商品名称',
   `sMetaKeywords` varchar(255) NOT NULL DEFAULT '' COMMENT '商品关键字用于模糊检索',
