@@ -13,12 +13,14 @@ import src.main.java.cn.net.communion.xml.Root;
 public class App {
 	public static String IP = "localhost";
 	public static String PASSWORD = "";
+	public static String PORT = "3306";
 	public static int THREADNUM = 200;
+	public static String DB = "ec";
     public static void main(String[] args) {
 
     	if(args.length!=0)
 		{
-			Getopt testOpt  = new Getopt(args[0], args, "h:p:c:");  
+			Getopt testOpt  = new Getopt(args[0], args, "h:p:c:P:D");  
 			int res;  
 	        while( (res = testOpt.getopt()) != -1 ) {  
 	          switch(res) {  
@@ -30,6 +32,12 @@ public class App {
 	              break; 
 	            case 'c':  
 	            	THREADNUM = Integer.parseInt(testOpt.getOptarg());  
+	              break; 
+	            case 'P':  
+	            	PORT = testOpt.getOptarg();  
+	              break; 
+	            case 'D':  
+	            	DB = testOpt.getOptarg();  
 	              break; 
 	            default:  
 	              System.out.println("input ip and password!");  

@@ -73,7 +73,7 @@ public class Generator {
             	{
                 	for(int i=0;i<threadNum;i++)
                 	{
-                		RunSQL rs = new RunSQL(detail,job,split,writer,i*split,i*split+split,sqlList,App.IP,App.PASSWORD);
+                		RunSQL rs = new RunSQL(detail,job,split,writer,i*split,i*split+split,sqlList,App.IP,App.PASSWORD,App.PORT,App.DB);
                 		thread_sql[i] = rs;
                 		rs.start();
                 	}
@@ -81,7 +81,7 @@ public class Generator {
             	RunSQL lrs = null;
             	if(left!=0)
             	{
-            		lrs = new RunSQL(detail,job,left,writer,threadNum*split,job.getNum(),sqlList,App.IP,App.PASSWORD);
+            		lrs = new RunSQL(detail,job,left,writer,threadNum*split,job.getNum(),sqlList,App.IP,App.PASSWORD,App.PORT,App.DB);
             		lrs.start();
             	}
             	try

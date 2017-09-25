@@ -30,12 +30,16 @@ public class RunSQL extends Thread {
 	private   String URL= "";
     private   String NAME="root";
     private   String PASSWORD="";
+    private   String PORT="3306";
+    private   String DB="ec";
     private Connection conn = null; 
     private Statement  stmt = null;
-	public RunSQL(List<KeyValue> detail,JobInfo job,int jobnum,FileWriter writer,int start,int end,List<String> sqlList,String IP,String PASSWORD){
+	public RunSQL(List<KeyValue> detail,JobInfo job,int jobnum,FileWriter writer,int start,int end,List<String> sqlList,String IP,String PASSWORD,String PORT,String DB){
 		this.IP = IP;
 		this.PASSWORD = PASSWORD;
-		URL = "jdbc:mysql://"+IP+":3306/ec?";
+		this.PORT=PORT;
+		this.DB=DB;
+		URL = "jdbc:mysql://"+IP+":"+PORT+"/"+DB+"?";
 		for(int i=0;i<detail.size();i++)
 		{
 			this.detail.add(detail.get(i));

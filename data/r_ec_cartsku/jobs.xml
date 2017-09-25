@@ -7,7 +7,8 @@
             <table>r_ec_cartsku</table>
             <filename>r_ec_cartsku.sql</filename>
             <detail>
-				<nProductID>$rule{nProductID,4}</nProductID>
+				<nCartSKUID>$rule{nCartSKUID,4}</nCartSKUID>
+				<nUserID>$rule{nUserID,4}</nUserID>
 				<nQuantity>$pool{nQuantity}</nQuantity>
             </detail>
         </job>
