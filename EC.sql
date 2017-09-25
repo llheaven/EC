@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-09-23 17:59:14
+Date: 2017-09-25 16:37:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -80,6 +80,7 @@ CREATE TABLE `r_ec_deliveryinfo` (
   `nAddressID` bigint(20) NOT NULL DEFAULT '0' COMMENT '用户收货地址',
   `sConsignee` varchar(1024) NOT NULL DEFAULT '' COMMENT '收货人',
   `sDeliveryComment` varchar(1024) NOT NULL DEFAULT '' COMMENT '收货备注信息',
+  `sDeliveryCode` varchar(255) NOT NULL DEFAULT '' COMMENT '快递单号',
   PRIMARY KEY (`nDeliveryID`),
   KEY `PRIMARY_sDeliveryID` (`nDeliveryID`) USING BTREE COMMENT ' 使用配送编号作为主键索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配送信息';
@@ -175,13 +176,13 @@ CREATE TABLE `r_ec_sku` (
   `nPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '商品价格',
   `nDisplayPrice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '商品展示价格',
   `nInventory` int(64) NOT NULL DEFAULT '0' COMMENT '库存数量',
-  `nDiscount` decimal(10,0) NOT NULL DEFAULT '0' COMMENT '折扣',
+  `nDiscount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '折扣',
   `sCurrency` varchar(16) NOT NULL DEFAULT 'RMB' COMMENT '货币类型:RMB...',
   `dCreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`nSKUID`),
   KEY `PRIMARY_nProductID` (`nSKUID`) USING BTREE COMMENT '使用产品id作为主键索引'
-) ENGINE=InnoDB AUTO_INCREMENT=923 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19372 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for r_ec_spu
@@ -202,7 +203,7 @@ CREATE TABLE `r_ec_spu` (
   `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`nSPUID`),
   KEY `PRIMARY_nProductID` (`nSPUID`) USING BTREE COMMENT ' 使用产品id作为主键索引'
-) ENGINE=InnoDB AUTO_INCREMENT=645 DEFAULT CHARSET=utf8 COMMENT='商品信息';
+) ENGINE=InnoDB AUTO_INCREMENT=646 DEFAULT CHARSET=utf8 COMMENT='商品信息';
 
 -- ----------------------------
 -- Table structure for r_ec_userbankinfo
@@ -248,7 +249,7 @@ CREATE TABLE `r_ec_userdeliveryaddress` (
 -- ----------------------------
 DROP TABLE IF EXISTS `r_ec_userinfo`;
 CREATE TABLE `r_ec_userinfo` (
-  `nUserID` int(64) NOT NULL AUTO_INCREMENT COMMENT '用户ID，由系统自动生成',
+  `nUserID` bigint(64) NOT NULL AUTO_INCREMENT COMMENT '用户ID，由系统自动生成',
   `sLoginName` varchar(32) NOT NULL DEFAULT '' COMMENT '登陆名,不能为空，并且不能重复',
   `sLoginPassword` varchar(32) NOT NULL DEFAULT '' COMMENT '登陆密码\r\n密码需要加密后保存\r\n',
   `sFirstName` varchar(32) NOT NULL DEFAULT '姓' COMMENT '用户First Name',
