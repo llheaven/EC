@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-09-25 16:37:28
+Date: 2017-09-25 17:03:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -53,9 +53,9 @@ CREATE TABLE `r_ec_cartsku` (
 -- ----------------------------
 DROP TABLE IF EXISTS `r_ec_category`;
 CREATE TABLE `r_ec_category` (
-  `nCategoryID` int(64) NOT NULL AUTO_INCREMENT COMMENT '商品种类ID',
+  `nCategoryID` bigint(64) NOT NULL AUTO_INCREMENT COMMENT '商品种类ID',
   `nLevel` int(64) DEFAULT '1' COMMENT '几级类目，从一级类目开始',
-  `nParentCategoryID` int(64) DEFAULT NULL COMMENT '当前商品类目所在的父类目，如果为0表示当前为一级类目。',
+  `nParentCategoryID` bigint(64) DEFAULT NULL COMMENT '当前商品类目所在的父类目，如果为0表示当前为一级类目。',
   `sCategoryName` varchar(64) DEFAULT NULL COMMENT '商品种类',
   `sCode` varchar(32) DEFAULT '' COMMENT '商品分类编码',
   `IsLeaf` char(1) DEFAULT '0' COMMENT '是否叶子节点: 0:否 ;1:是',
@@ -210,7 +210,7 @@ CREATE TABLE `r_ec_spu` (
 -- ----------------------------
 DROP TABLE IF EXISTS `r_ec_userbankinfo`;
 CREATE TABLE `r_ec_userbankinfo` (
-  `sCardID` varchar(32) NOT NULL COMMENT ' 银行卡号',
+  `sCardID` bigint(64) NOT NULL AUTO_INCREMENT COMMENT ' 银行卡号',
   `nUserID` bigint(64) NOT NULL COMMENT '用户id',
   `sBank` smallint(6) NOT NULL DEFAULT '0' COMMENT '绑定卡对应的银行。0：中国银行;1：农业银行;2：工商银行;3：建设银行...',
   `sCardType` smallint(6) NOT NULL DEFAULT '1' COMMENT '银行卡种类。1：借记卡;2：信用卡',
@@ -256,7 +256,7 @@ CREATE TABLE `r_ec_userinfo` (
   `sLastName` varchar(32) NOT NULL DEFAULT '名' COMMENT '用户Last Name',
   `sPhoneNo` varchar(16) NOT NULL DEFAULT '13800138000' COMMENT '手机号码\r\n格式：13800138000\r\n       (021)12345678\r\n       (0086)13800138000\r\n',
   `sEmailAddress` varchar(32) NOT NULL DEFAULT 'example@huawei.com' COMMENT '电子邮箱',
-  `cGender` enum('2','1','0') NOT NULL DEFAULT '1' COMMENT '性别\r\n0：男\r\n1：女\r\n2：其它\r\n',
+  `cGender` smallint(6) NOT NULL DEFAULT '1' COMMENT '性别\r\n0：男\r\n1：女\r\n2：其它\r\n',
   `sBirthday` date NOT NULL DEFAULT '1970-00-00' COMMENT '生日\r\n格式：YYYY-MM-DD\r\n',
   `sRegisterTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间\r\n格式：YYYY-MM-DD HH:MM:SS\r\n',
   `sPayPassword` varchar(32) NOT NULL DEFAULT '' COMMENT '支付密码。\r\n保存时需要加密保存\r\n',
