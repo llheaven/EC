@@ -36,7 +36,7 @@ function prepare_statements()
       prepare_distinct_ranges()
    end
 
-   prepare_index_updates()
+--   prepare_index_updates()
    prepare_non_index_updates()
    prepare_delete_inserts()
 end
@@ -55,7 +55,7 @@ function event()
       execute_distinct_ranges()
    end
 
-   execute_index_updates()
+  -- execute_index_updates()
    execute_non_index_updates()
    execute_delete_inserts()
 

@@ -22,21 +22,10 @@
 require("oltp_common")
 
 function prepare_statements()
-   prepare_point_selects()
-
-   if not sysbench.opt.skip_trx then
-      prepare_begin()
-      prepare_commit()
-   end
-
-   if sysbench.opt.range_selects then
-      prepare_simple_ranges()
-      prepare_sum_ranges()
-      prepare_order_ranges()
-      prepare_distinct_ranges()
-   end
-end
-
+   -- We do not use prepared statements here, but oltp_common.sh expects this
+   --    -- function to be defined
+ end
+   
 function event()
    if not sysbench.opt.skip_trx then
       begin()

@@ -32,11 +32,11 @@ end
 -- Command line options
 sysbench.cmdline.options = {
    table_size =
-      {"Number of rows per table", 1000000},
+      {"Number of rows per table", 10000000},
    range_size =
       {"Range size for range SELECT queries", 100},
    tables =
-      {"Number of tables", 10},
+      {"Number of tables", 5},
    point_selects =
      {"Number of point SELECT queries per transaction", 10},
    simple_ranges =
@@ -251,7 +251,7 @@ local stmt_defs = {
       "SELECT DISTINCT c FROM sbtest%u WHERE id BETWEEN ? AND ? ORDER BY c",
       t.INT, t.INT},
    index_updates = {
-      "UPDATE sbtest%u SET k=k+1 WHERE id=?",
+      "UPDATE sbtest%u SET k=k WHERE id=?",
       t.INT},
    non_index_updates = {
       "UPDATE sbtest%u SET c=? WHERE id=?",
@@ -265,11 +265,13 @@ local stmt_defs = {
 }
 
 function prepare_begin()
-   stmt.begin = con:prepare("BEGIN")
+--   stmt.begin = con:prepare("BEGIN")
+     con:query("START TRANSACTION")
 end
 
 function prepare_commit()
-   stmt.commit = con:prepare("COMMIT")
+--   stmt.commit = con:prepare("COMMIT")
+     con:query("COMMIT")
 end
 
 function prepare_for_each_table(key)
@@ -391,35 +393,60 @@ local function get_id()
 end
 
 function begin()
-   stmt.begin:execute()
+   con:query("START TRANSACTION")
+--   stmt.begin:execute()
 end
 
 function commit()
-   stmt.commit:execute()
+   con:query("COMMIT")
+
+--   stmt.commit:execute()
 end
 
 function execute_point_selects()
    local tnum = get_table_num()
    local i
-
    for i = 1, sysbench.opt.point_selects do
-      param[tnum].point_selects[1]:set(get_id())
-
-      stmt[tnum].point_selects:execute()
+       local table_name = "sbtest" .. sysbench.rand.uniform(1, sysbench.opt.tables)	
+       local id=get_id()
+	con:query(string.format("select c from %s where id=%d",
+                              table_name,id))
+      --param[tnum].point_selects[1]:set(get_id())
+     -- stmt[tnum].point_selects:execute()
    end
 end
 
 local function execute_range(key)
-   local tnum = get_table_num()
-
-   for i = 1, sysbench.opt[key] do
+    for i = 1, sysbench.opt[key] do
       local id = get_id()
+      local id_last = id + sysbench.opt.range_size - 1
+    --  print(id)
+     -- print(id_last)
+      local table_name = "sbtest" .. sysbench.rand.uniform(1, sysbench.opt.tables)
+      --print(key) 
+      if key=="simple_ranges" then
+	 con:query(string.format("select c from %s where id =%d",
+                              table_name,id))
+      end
+      if key=="sum_ranges" then
+         con:query(string.format("select sum(k) from %s where id between %d and %d",
+                              table_name,id,id_last))
+     end
+      if key=="order_ranges" then
+         con:query(string.format("select c from %s where id between %d and %d order by c",
+                              table_name,id,id_last))
+      end
+      if key=="ditinct_ranges" then
+         con:query(string.format("select distinct c from %s where id between %d and %d order by c",
+                              table_name,id,id_last))
+end
 
-      param[tnum][key][1]:set(id)
-      param[tnum][key][2]:set(id + sysbench.opt.range_size - 1)
+  
+--      param[tnum][key][1]:set(id)
+--    param[tnum][key][2]:set(id + sysbench.opt.range_size - 1)
 
-      stmt[tnum][key]:execute()
-   end
+--      stmt[tnum][key]:execute()
+    end
 end
 
 function execute_simple_ranges()
