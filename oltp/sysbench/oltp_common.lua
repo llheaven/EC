@@ -38,7 +38,7 @@ sysbench.cmdline.options = {
    tables =
       {"Number of tables", 10},
    point_selects =
-      {"Number of point SELECT queries per transaction", 10},
+     {"Number of point SELECT queries per transaction", 10},
    simple_ranges =
       {"Number of simple range SELECT queries per transaction", 1},
    sum_ranges =
