@@ -34,10 +34,10 @@ function event()
    execute_point_selects()
 
    if sysbench.opt.range_selects then
-      execute_simple_ranges()
-      execute_sum_ranges()
-      execute_order_ranges()
-      execute_distinct_ranges()
+     execute_simple_ranges()
+     execute_sum_ranges()
+     execute_order_ranges()
+     execute_distinct_ranges()
    end
 
    if not sysbench.opt.skip_trx then

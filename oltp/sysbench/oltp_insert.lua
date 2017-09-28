@@ -32,19 +32,8 @@ function event()
    local c_val = get_c_value()
    local pad_val = get_pad_value()
 
-   if (drv:name() == "pgsql" and sysbench.opt.auto_inc) then
-      con:query(string.format("replace INTO %s (k, c, pad) VALUES " ..
-                                 "(%d, '%s', '%s')",
-                              table_name, k_val, c_val, pad_val))
-   else
-      if (sysbench.opt.auto_inc) then
-         i = 0
-      else
-         i = sysbench.rand.unique()
-      end
-
+      i = sysbench.rand.unique()
       con:query(string.format("replace  INTO %s (id, k, c, pad) VALUES " ..
                                  "(%d, %d, '%s', '%s')",
                               table_name, i, k_val, c_val, pad_val))
-   end
 end

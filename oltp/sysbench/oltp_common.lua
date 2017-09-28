@@ -50,7 +50,7 @@ sysbench.cmdline.options = {
    index_updates =
       {"Number of UPDATE index queries per transaction", 1},
    non_index_updates =
-      {"Number of UPDATE non-index queries per transaction", 1},
+     {"Number of UPDATE non-index queries per transaction", 1},
    delete_inserts =
       {"Number of DELETE/INSERT combination per transaction", 1},
    range_selects =
@@ -58,7 +58,7 @@ sysbench.cmdline.options = {
    auto_inc =
    {"Use AUTO_INCREMENT column as Primary Key (for MySQL), " ..
        "or its alternatives in other DBMS. When disabled, use " ..
-       "client-generated IDs", true},
+       "client-generated IDs", false},
    skip_trx =
       {"Don't start explicit transactions and execute all queries as " ..
           "in the AUTOCOMMIT mode", false},
@@ -158,7 +158,7 @@ function create_table(drv, con, table_num)
       drv:name() == "drizzle"
    then
       if sysbench.opt.auto_inc then
-         id_def = "INTEGER NOT NULL AUTO_INCREMENT"
+         id_def = "INTEGER NOT NULL"
       else
          id_def = "INTEGER NOT NULL"
       end
@@ -251,7 +251,7 @@ local stmt_defs = {
       "SELECT DISTINCT c FROM sbtest%u WHERE id BETWEEN ? AND ? ORDER BY c",
       t.INT, t.INT},
    index_updates = {
-      "UPDATE sbtest%u SET k=k WHERE id=?",
+      "UPDATE sbtest%u SET k=k+1 WHERE id=?",
       t.INT},
    non_index_updates = {
       "UPDATE sbtest%u SET c=? WHERE id=?",
@@ -260,7 +260,7 @@ local stmt_defs = {
       "DELETE FROM sbtest%u WHERE id=?",
       t.INT},
    inserts = {
-      "INSERT INTO sbtest%u (id, k, c, pad) VALUES (?, ?, ?, ?)",
+      "insert INTO sbtest%u (id, k, c, pad) VALUES (?, ?, ?, ?)",
       t.INT, t.INT, {t.CHAR, 120}, {t.CHAR, 60}},
 }
 
@@ -425,11 +425,11 @@ local function execute_range(key)
       local table_name = "sbtest" .. sysbench.rand.uniform(1, sysbench.opt.tables)
       --print(key) 
       if key=="simple_ranges" then
-	 con:query(string.format("select c from %s where id =%d",
+	 con:query(string.format("select id from %s where id =%d",
                               table_name,id))
       end
       if key=="sum_ranges" then
-         con:query(string.format("select sum(k) from %s where id between %d and %d",
+         con:query(string.format("select id from %s where id between %d and %d",
                               table_name,id,id_last))
      end
       if key=="order_ranges" then
