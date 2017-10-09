@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-09-25 17:58:41
+Date: 2017-10-09 14:27:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -44,7 +44,7 @@ CREATE TABLE `r_ec_cartsku` (
   `nShoppingCartID` bigint(64) NOT NULL DEFAULT '0' COMMENT '购物车ID',
   `nCartSKUID` bigint(64) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `dCreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '生成时间',
-  `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`nCartSKUID`),
   KEY `PRIMARY_nUserID` (`nUserID`) USING BTREE COMMENT '使用用户id作为主键索引',
   KEY `PRIMARY_nProductID` (`nSKUID`) USING BTREE COMMENT '使用产品id作为主键索引'
@@ -101,7 +101,7 @@ CREATE TABLE `r_ec_image` (
   `dCreateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`nImageID`),
   KEY `PRIMARY_nImageID` (`nImageID`) USING BTREE COMMENT '使用image的id作为主键索引'
-) ENGINE=InnoDB AUTO_INCREMENT=543 DEFAULT CHARSET=utf8 COMMENT='图片附件信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片附件信息';
 
 -- ----------------------------
 -- Table structure for r_ec_orderinfo
@@ -205,7 +205,7 @@ CREATE TABLE `r_ec_spu` (
   `dUpdateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`nSPUID`),
   KEY `PRIMARY_nProductID` (`nSPUID`) USING BTREE COMMENT ' 使用产品id作为主键索引'
-) ENGINE=InnoDB AUTO_INCREMENT=646 DEFAULT CHARSET=utf8 COMMENT='商品信息';
+) ENGINE=InnoDB AUTO_INCREMENT=644 DEFAULT CHARSET=utf8 COMMENT='商品信息';
 
 -- ----------------------------
 -- Table structure for r_ec_userbankinfo
@@ -266,3 +266,4 @@ CREATE TABLE `r_ec_userinfo` (
   UNIQUE KEY `UNIQUE_sLoginName` (`sLoginName`) USING BTREE COMMENT '此唯一索引主要保证用户名的唯一性',
   KEY `PRIMARY_nUserID` (`nUserID`) USING BTREE COMMENT '使用用户id作为主键索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户基本信息表';
+SET FOREIGN_KEY_CHECKS=1;
