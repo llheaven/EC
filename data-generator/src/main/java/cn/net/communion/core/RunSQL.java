@@ -15,7 +15,7 @@ import src.main.java.cn.net.communion.entity.KeyValue;
 import src.main.java.cn.net.communion.helper.FileHelper;
 
 public class RunSQL extends Thread {
-	private List<KeyValue> detail = new ArrayList<KeyValue>(); ;
+	private List<KeyValue> detail = new ArrayList<KeyValue>(); 
 	private Map<String, String> tempMap = new HashMap<String, String>();
 	private Generator generator = new Generator();
 	private JobInfo job ;

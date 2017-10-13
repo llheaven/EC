@@ -15,7 +15,7 @@ public class PropsReader {
     private PropsReader() {
         props = new Properties();
         try {
-            InputStreamReader in = new InputStreamReader(new FileInputStream("config.properties"),"utf-8");
+            InputStreamReader in = new InputStreamReader(new FileInputStream(ArgParser.CONFIGFILE),"utf-8");
             props.load(in);
 
         } catch (IOException e) {

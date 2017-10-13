@@ -1,7 +1,9 @@
 package src.main.java.cn.net.communion.core;
 
 
+import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
 import src.main.java.cn.net.communion.helper.FileHelper;
 import src.main.java.cn.net.communion.helper.PropsReader;
 import src.main.java.cn.net.communion.helper.RandomData;
+import src.main.java.cn.net.communion.main.App;
 
 
 
@@ -20,6 +23,7 @@ public class Parser {
     private Pattern varPattern;
     private Pattern rulePattern;
     private Pattern poolPattern;
+    private Pattern primaryKeyPattern;
     private Pattern datePattern;
     private PropsReader props;
     private Map<String, String> poolFileMap = new HashMap<String, String>();
@@ -30,7 +34,8 @@ public class Parser {
         varPattern = Pattern.compile("\\$var\\{(\\w+)\\}");
         rulePattern = Pattern.compile("\\$rule\\{([0-9a-zA-Z,]+)\\}");
         poolPattern = Pattern.compile("\\$pool\\{([0-9a-zA-Z.]+)\\}");
- //       datePattern = Pattern.compile("\\$date\\{([^\\s,]+),([^\\s,]+),([^\\s,]+)\\}");
+        primaryKeyPattern = Pattern.compile("\\$key");
+        datePattern = Pattern.compile("\\$datetime");
         props = PropsReader.getInstance();
 
     }
@@ -46,11 +51,11 @@ public class Parser {
 
     static public boolean checkGrammar(String value) {
         return value.contains("$var") || value.contains("$rule") || value.contains("$pool")
-                || value.contains("$date");
+                || value.contains("$key")|| value.contains("$datetime");
     }
 
     public String execute() {
-        parseVar().parseRule().parsePool();//.parseDate();
+        parseVar().parseRule().parsePool().parseKey().parseDate();
         return value;
     }
 
@@ -71,6 +76,7 @@ public class Parser {
         }
         return this;
     }
+
 
     private String getRuleData(String[] arr) {
         String content = props.getProperty("rule." + arr[0]);
@@ -105,23 +111,33 @@ public class Parser {
             return RandomData.getPoolData(poolContent.split(","));
         }
     }
-
-//    private Parser parseDate() {
-//        Matcher m = datePattern.matcher(value);
-//        if (m.find()) {
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(m.group(3));
-//            LocalDate startDate = m.group(1).trim().equals("now") ? LocalDate.now()
-//                    : LocalDate.parse(m.group(1).trim());
-//            LocalDate endDate = m.group(2).trim().equals("now") ? LocalDate.now()
-//                    : LocalDate.parse(m.group(2).trim());
-//            int length = (int) startDate.until(endDate, ChronoUnit.DAYS);
-//            LocalDate randDate = length > 0 ? startDate.plusDays(rand.nextInt(length + 1))
-//                    : startDate.minusDays(rand.nextInt(1 - length));
-//            value = value.replace(m.group(), randDate.format(formatter));
-//        }
-//        return this;
-//    }
-
+    
+    private Parser parseKey() {
+        Matcher m = primaryKeyPattern.matcher(value);
+        if (m.find()) {
+            value = value.replace(m.group(0), getKeyData());
+        }
+        return this;
+    }
+    
+    private synchronized String getKeyData() {
+    	String Key = Integer.toString(App.KEY);
+    	App.KEY++;
+    	return Key;
+    }
+    
+    private Parser parseDate() {
+        Matcher m = datePattern.matcher(value);
+        if (m.find()) {
+            value = value.replace(m.group(0), getDateData());
+        }
+        return this;
+    }
+    
+    private synchronized String getDateData() {
+    	SimpleDateFormat date_now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	return date_now.format(new Date()).toString();
+    }
     public String getValue() {
         return value;
     }
@@ -137,20 +153,4 @@ public class Parser {
     public void setMap(Map<String, String> map) {
         this.map = map;
     }
-
-    // public static void main(String [] args){
-    // Pattern datePattern = Pattern.compile("\\$date\\{([^\\s,]+),([^\\s,]+),([^\\s,]+)\\}");
-    // Matcher m = datePattern.matcher("$date{2017-02-01,now,yyyy/MM/dd}");
-    //
-    // if(m.find()){
-    // System.out.println(m.group(3));
-    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern(m.group(3));
-    // String start = m.group(1).trim();
-    // String end = m.group(2).trim();
-    // LocalDate startDate = start.equals("now") ? LocalDate.now() : LocalDate.parse(start);
-    // LocalDate endDate = end.equals("now") ? LocalDate.now() : LocalDate.parse(end);
-    // int length = (int) startDate.until(endDate, ChronoUnit.DAYS);
-    // System.out.println(startDate.plusDays(rand.nextInt(length)).format(formatter));
-    // }
-    // }
 }

@@ -20,97 +20,80 @@ public class RunSQL extends Thread {
 	private String IP = "localhost";
 	//
 	private   String URL= "";
-    private   String NAME="root";
-    private   String PASSWORD="";
-    private static final String sql1 = "select * from r_ec_userinfo where nUserID=?;";
-    private static final String sql2 = "select * from r_ec_shoppingcart where nUserID =?;";
-    private static final String sql3 = "select * from r_ec_cartsku ct join r_ec_sku sku on ct.nProductID = sku.nSKUID where ct.nUserID=?";
-    private static final String sql4 = "update r_ec_cartsku set nQuantity=123 where nUserID=?;";
-    private static final String sql5 = "delete from r_ec_cartsku where nProductID=?;";
-    private static final String sql6="replace into r_ec_cartsku(nUserID,nProductID,nQuantity) values(?,?,?);";
-    private Connection conn = null; 
-    private Statement  stmt = null;
-    private ResultSet rs = null;
-    private int thread_no = 0;
-    private PreparedStatement pstmt1 = null;
-    private PreparedStatement pstmt2 = null;
-    private PreparedStatement pstmt3 = null;
-    private PreparedStatement pstmt4 = null;
-    private PreparedStatement pstmt5 = null;
-    private PreparedStatement pstmt6 = null;
-    private int TPS_NUM = 100000;
-    
-    public int getRandomInteger(int start,int end)
-    {
-    	Random random = new Random();
-		return random.nextInt(end)%(end-start+1) + start;
-    }
-	public RunSQL(int TPS_NUM,int thread_no,String IP,String PASSWORD){
+	private   String NAME="root";
+	private   String PASSWORD="";
+	private   String PORT="3306";
+	private   String DB="ec";
+	private   String TRANSACTION= "Transaction2";
+	private Connection conn = null; 
+	private int thread_no = 0;
+	private int TPS_NUM = 100;
+	//
+	private   Transaction transaction;
+
+	public RunSQL(int TPS_NUM,int thread_no,String IP,String PASSWORD,String PORT,String DB,String TRANSACTION){
 		this.TPS_NUM = TPS_NUM;
 		this.IP = IP;
 		this.PASSWORD = PASSWORD;
-		URL = "jdbc:mysql://"+IP+":3306/ec?";
-        try {  
-            Class.forName("com.mysql.jdbc.Driver");  
-        } catch (ClassNotFoundException e) {  
-            e.printStackTrace();  
-        }  
-        try {  
-            conn = DriverManager.getConnection(URL, NAME, PASSWORD);  
-            pstmt1 =  conn.prepareStatement(sql1);
-            pstmt2 = conn.prepareStatement(sql2);
-            pstmt3 = conn.prepareStatement(sql3);
-            pstmt4 = conn.prepareStatement(sql4);
-            pstmt5 = conn.prepareStatement(sql5);
-            pstmt6 = conn.prepareStatement(sql6);
-            stmt = conn.createStatement(); 
-            conn.setAutoCommit(false); 
-        } catch (SQLException e) {  
-            System.out.println("获取数据库连接失败！");  
-            e.printStackTrace();  
-        }  
-        
-        
+		this.PORT = PORT;
+		this.DB = DB;
+		this.TRANSACTION = TRANSACTION;
+		URL = "jdbc:mysql://"+IP+":"+PORT+"/"+DB+"?";
+		try {  
+			Class.forName("com.mysql.jdbc.Driver");  
+		} catch (ClassNotFoundException e) {  
+			e.printStackTrace();  
+		}  
+		try {  
+			conn = DriverManager.getConnection(URL, NAME, PASSWORD);  
+
+			switch (TRANSACTION) {
+			case "Transaction2":
+				transaction = new Transaction2(conn);
+				break;
+			case "Transaction1":
+				transaction = new Transaction1(conn);
+				break;
+			case "Transaction3":
+				transaction = new Transaction3(conn);
+				break;
+			case "Transaction4":
+				transaction = new Transaction4(conn);
+				break;
+			default:
+				transaction = new Transaction2(conn);
+				break;
+			}
+
+
+			conn.setAutoCommit(false); 
+		} catch (SQLException e) {  
+			System.out.println("获取数据库连接失败！");  
+			e.printStackTrace();  
+		}  
+
+
 	}
 
-	 public void run() {
-		 for (int i = 0; i < TPS_NUM; i++) {
-			 int nUserID = getRandomInteger(1, 400000);
-			 int nProductID = getRandomInteger(1111, 9999);
-			 int nQuantity = getRandomInteger(1, 9999);
-			 try {
-				 stmt.executeQuery("start transaction");
-				 pstmt1.setInt(1, nUserID);
-				 pstmt2.setInt(1, nUserID);
-				 pstmt3.setInt(1, nUserID);
-				 pstmt4.setInt(1, nUserID);
-				 pstmt5.setInt(1,nProductID);
-				 pstmt6.setInt(1,nUserID);
-				 pstmt6.setInt(2,nProductID);
-				 pstmt6.setInt(3,nQuantity);
-				 //
-				 rs = pstmt1.executeQuery();
-				 //rs = pstmt2.executeQuery();
-				 //rs = pstmt3.executeQuery();
-				 //pstmt4.executeUpdate();
-				// pstmt5.executeUpdate();
-				//pstmt6.executeUpdate();
-				 stmt.executeQuery("commit");
+	public void run() {
+		
+		for (int i = 0; i < TPS_NUM; i++) {
+			try {
+				transaction.execute();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block 
 				//e.printStackTrace();
 			}
-         }
-        if(conn!=null)  
-        {  
-            try {  
-                conn.close();  
-            } catch (SQLException e) {  
-                e.printStackTrace();  
-                conn=null;  
-            }  
-        }  
-        //System.out.println("thread "+thread_no+" job done!");
-	 }
+		}
+		if(conn!=null)  
+		{  
+			try {  
+				conn.close();  
+			} catch (SQLException e) {  
+				e.printStackTrace();  
+				conn=null;  
+			}  
+		}  
+	}
 
 }

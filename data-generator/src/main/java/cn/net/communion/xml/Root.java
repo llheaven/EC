@@ -11,6 +11,7 @@ import org.dom4j.io.SAXReader;
 
 import src.main.java.cn.net.communion.entity.JobInfo;
 import src.main.java.cn.net.communion.entity.KeyValue;
+import src.main.java.cn.net.communion.helper.ArgParser;
 
 
 
@@ -72,7 +73,7 @@ public class Root {
 
     static public void main(String[] args) {
         Root parser = new Root();
-        parser.loadXml("jobs.xml");
+        parser.loadXml(ArgParser.JOBFILE);
     }
 
     public List<JobInfo> getJobList() {

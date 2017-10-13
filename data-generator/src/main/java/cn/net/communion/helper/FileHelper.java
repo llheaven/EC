@@ -35,7 +35,7 @@ public class FileHelper {
             System.out.println(map);
             return;
         }
-        StringBuffer line = new StringBuffer("replace into ").append(table).append(" (").append(collectionToLine(map.keySet())).append(")").append(" values(")
+        StringBuffer line = new StringBuffer(ArgParser.INSERTORREPLACE+" into ").append(table).append(" (").append(collectionToLine(map.keySet())).append(")").append(" values(")
                         .append(collectionToLineWithQuotes(map.values())).append(");");
         if (writer != null) {
             save(writer, line);
@@ -48,7 +48,7 @@ public class FileHelper {
             System.out.println(map);
             return null;
         }
-        StringBuffer line = new StringBuffer("replace into ").append(table).append(" (").append(collectionToLine(map.keySet())).append(")").append(" values(")
+        StringBuffer line = new StringBuffer(ArgParser.INSERTORREPLACE+" into ").append(table).append(" (").append(collectionToLine(map.keySet())).append(")").append(" values(")
                         .append(collectionToLineWithQuotes(map.values())).append(");");
         return line;
 
